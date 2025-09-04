@@ -1,9 +1,9 @@
 ---
 import "../styles/global.css";
-const title = "EGGcellent";
-const description = "10ksquad on Monad Testnet.";
-const keywords = "10k";
-const twitter = "@the10kSquad";
+const title = "Project 1";
+const description = "Generic project description.";
+const keywords = "project";
+const twitter = "@project";
 const image = "/10.png";
 ---
 
@@ -84,7 +84,7 @@ const image = "/10.png";
 			if (!/^(0x)?[0-9a-fA-F]{40}$/.test(input.value)) return;
 			submission.classList.replace("flex", "hidden");
 			confirmation.classList.replace("hidden", "flex");
-			info.innerText = `Confirm wallet 0x${input.value.slice(2, 4)}...${input.value.slice(38, 42)}`;
+			info.innerText = `Confirm address 0x${input.value.slice(2, 4)}...${input.value.slice(38, 42)}`;
 		}, 100);
 	});
 
@@ -92,7 +92,7 @@ const image = "/10.png";
 		if (!/^(0x)?[0-9a-fA-F]{40}$/.test(input.value)) return;
 		submission.classList.replace("flex", "hidden");
 		confirmation.classList.replace("hidden", "flex");
-		info.innerText = `Confirm wallet 0x${input.value.slice(2, 4)}...${input.value.slice(38, 42)}`;
+		info.innerText = `Confirm address 0x${input.value.slice(2, 4)}...${input.value.slice(38, 42)}`;
 	});
 
 	submit.addEventListener("click", async () => {
@@ -101,15 +101,15 @@ const image = "/10.png";
 		
 		switch (status) {
 			case "GTD":
-				button.innerText = "GTD Whitelist";
+				button.innerText = "GTD Access";
 				button.classList.add("bg-green-500");
 				break;
 			case "FCFS":
-				button.innerText = "FCFS Whitelist";
+				button.innerText = "FCFS Access";
 				button.classList.add("bg-yellow-500");
 				break;
 			case "NOT_FOUND":
-				button.innerText = "Not Whitelisted";
+				button.innerText = "No Access";
 				button.classList.add("bg-red-500");
 				break;
 			default:
@@ -146,7 +146,7 @@ const image = "/10.png";
 		<div class="flex flex-1 flex-col">
 			<header class="flex items-center justify-center h-14 ">
 				<a href="/" class="text-3xl md:text-5xl font-bold" style="color: #FFD700;">
-					EGGcellent COLLECTION
+					PROJECT 1
 				</a>
 			</header>
 			<main
@@ -154,12 +154,12 @@ const image = "/10.png";
 			>
 				<button
 					class="bg-[#ffcb4b] text-xl text-[#050000] border-[#050000] h-13 px-18 rounded-full font-bold border-2 hover:opacity-75 hover:cursor-pointer"
-					id="button">Check Wallet Status</button
+					id="button">Check Status</button
 				>
 
 				<div class="flex justify-center gap-10">
 					<a
-						href="https://discord.gg/the10ksquad"
+						href="https://discord.gg/project"
 						target="_blank"
 						class="text-white flex justify-center hover:opacity-75 duration-100"
 						aria-label="discord"
@@ -175,7 +175,7 @@ const image = "/10.png";
 						>
 					</a>
 					<a
-						href="https://x.com/the10kSquad"
+						href="https://x.com/project"
 						target="_blank"
 						class="text-white flex justify-center hover:opacity-75 duration-100"
 						aria-label="x"
@@ -200,7 +200,7 @@ const image = "/10.png";
 					class="w-full flex text-[#050000] md:w-fit flex-col gap-1.5 bg-[#ffcb4b] backdrop-blur-xl rounded-3xl px-4 py-3 border-2 border-[#050000]"
 					id="submission"
 				>
-					<p class="text-xl">Paste your wallet.</p>
+					<p class="text-xl">Enter your address.</p>
 					<input
 						type="text"
 						autocorrect="off"
@@ -216,7 +216,7 @@ const image = "/10.png";
 					id="confirmation"
 				>
 					<p class="text-xl" id="info">
-						Do you want to submit 0x00...0000?
+						Confirm address 0x00...0000?
 					</p>
 					<button
 						id="submit"
