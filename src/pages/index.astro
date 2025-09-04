@@ -1,0 +1,231 @@
+---
+import "../styles/global.css";
+const title = "EGGcellent";
+const description = "10ksquad on Monad Testnet.";
+const keywords = "10k";
+const twitter = "@the10kSquad";
+const image = "/10.png";
+---
+
+<script>
+	const button = document.getElementById("button") as HTMLButtonElement;
+	const main = document.getElementsByTagName("main").item(0) as HTMLElement;
+	const popup = document.getElementById("popup") as HTMLElement;
+	const input = document.getElementById("input") as HTMLInputElement;
+	const submission = document.getElementById("submission") as HTMLElement;
+	const confirmation = document.getElementById("confirmation") as HTMLElement;
+	const submit = document.getElementById("submit") as HTMLButtonElement;
+	const info = document.getElementById("info") as HTMLParagraphElement;
+
+	const checkWalletStatus = async (address: string) => {
+		try {
+			console.log("Confirm wallet:", address);
+			const gtdResponse = await fetch("/wl/Gtd.csv");
+			const fcfsResponse = await fetch("/wl/Fcfs.csv");
+			
+			if (!gtdResponse.ok || !fcfsResponse.ok) {
+				console.error("Failed to fetch CSV files:", {
+					gtd: gtdResponse.status,
+					fcfs: fcfsResponse.status
+				});
+				return "ERROR";
+			}
+			
+			const gtdText = await gtdResponse.text();
+			const fcfsText = await fcfsResponse.text();
+			
+			console.log("GTD content:", gtdText);
+			console.log("FCFS content:", fcfsText);
+			
+			const gtdAddresses = gtdText.split("\n")
+				.map(addr => addr.trim())
+				.filter(addr => addr !== "");
+			const fcfsAddresses = fcfsText.split("\n")
+				.map(addr => addr.trim())
+				.filter(addr => addr !== "");
+			
+			console.log("Parsed addresses:", {
+				gtd: gtdAddresses,
+				fcfs: fcfsAddresses
+			});
+			
+			const normalizedAddress = address.toLowerCase();
+			console.log("Normalized input address:", normalizedAddress);
+			
+			if (gtdAddresses.some(addr => addr.toLowerCase() === normalizedAddress)) {
+				console.log("Found in GTD list");
+				return "GTD";
+			} else if (fcfsAddresses.some(addr => addr.toLowerCase() === normalizedAddress)) {
+				console.log("Found in FCFS list");
+				return "FCFS";
+			} else {
+				console.log("Address not found in either list");
+				return "NOT_FOUND";
+			}
+		} catch (error) {
+			console.error("Error checking wallet status:", error);
+			return "ERROR";
+		}
+	};
+
+	const showPopup = () => {
+		popup.classList.replace("hidden", "flex");
+	};
+
+	button.addEventListener("click", showPopup);
+
+	popup.addEventListener("click", (e) => {
+		if (e.target !== popup) return;
+		popup.classList.replace("flex", "hidden");
+	});
+
+	input.addEventListener("paste", (e) => {
+		setTimeout(() => {
+			if (!/^(0x)?[0-9a-fA-F]{40}$/.test(input.value)) return;
+			submission.classList.replace("flex", "hidden");
+			confirmation.classList.replace("hidden", "flex");
+			info.innerText = `Confirm wallet 0x${input.value.slice(2, 4)}...${input.value.slice(38, 42)}`;
+		}, 100);
+	});
+
+	input.addEventListener("keyup", (e) => {
+		if (!/^(0x)?[0-9a-fA-F]{40}$/.test(input.value)) return;
+		submission.classList.replace("flex", "hidden");
+		confirmation.classList.replace("hidden", "flex");
+		info.innerText = `Confirm wallet 0x${input.value.slice(2, 4)}...${input.value.slice(38, 42)}`;
+	});
+
+	submit.addEventListener("click", async () => {
+		const status = await checkWalletStatus(input.value);
+		popup.classList.replace("flex", "hidden");
+		
+		switch (status) {
+			case "GTD":
+				button.innerText = "GTD Whitelist";
+				button.classList.add("bg-green-500");
+				break;
+			case "FCFS":
+				button.innerText = "FCFS Whitelist";
+				button.classList.add("bg-yellow-500");
+				break;
+			case "NOT_FOUND":
+				button.innerText = "Not Whitelisted";
+				button.classList.add("bg-red-500");
+				break;
+			default:
+				button.innerText = "Error Checking Status";
+				button.classList.add("bg-gray-500");
+		}
+		
+		button.classList.replace("hover:cursor-pointer", "hover:cursor-not-allowed");
+	});
+</script>
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="shortcut icon" type="image/png" href="/10.png" />
+		<meta name="viewport" content="width=device-width" />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<meta name="keywords" content={keywords} />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={image} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:site" content={twitter} />
+		<meta name="twitter:creator" content={twitter} />
+		<meta name="twitter:image" content={image} />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Passero+One&display=swap"
+			rel="stylesheet"
+		/>
+	</head>
+	<body class="text-white flex flex-col min-h-svh">
+		<div class="flex flex-1 flex-col">
+			<header class="flex items-center justify-center h-14 ">
+				<a href="/" class="text-3xl md:text-5xl font-bold" style="color: #FFD700;">
+					EGGcellent COLLECTION
+				</a>
+			</header>
+			<main
+				class="flex-1 flex flex-col items-center px-4 py-12 gap-8 justify-center mt-116"
+			>
+				<button
+					class="bg-[#ffcb4b] text-xl text-[#050000] border-[#050000] h-13 px-18 rounded-full font-bold border-2 hover:opacity-75 hover:cursor-pointer"
+					id="button">Check Wallet Status</button
+				>
+
+				<div class="flex justify-center gap-10">
+					<a
+						href="https://discord.gg/the10ksquad"
+						target="_blank"
+						class="text-white flex justify-center hover:opacity-75 duration-100"
+						aria-label="discord"
+					>
+						<svg
+							width="48"
+							height="48"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							><path
+								d="M20.32 4.37a19.8 19.8 0 0 0-4.93-1.51 13.78 13.78 0 0 0-.64 1.28 18.27 18.27 0 0 0-5.5 0 12.64 12.64 0 0 0-.64-1.28h-.05A19.74 19.74 0 0 0 3.64 4.4 20.26 20.26 0 0 0 .11 18.09l.02.02a19.9 19.9 0 0 0 6.04 3.03l.04-.02a14.24 14.24 0 0 0 1.23-2.03.08.08 0 0 0-.05-.07 13.1 13.1 0 0 1-1.9-.92.08.08 0 0 1 .02-.1 10.2 10.2 0 0 0 .41-.31h.04a14.2 14.2 0 0 0 12.1 0l.04.01a9.63 9.63 0 0 0 .4.32.08.08 0 0 1-.03.1 12.29 12.29 0 0 1-1.9.91.08.08 0 0 0-.02.1 15.97 15.97 0 0 0 1.27 2.01h.04a19.84 19.84 0 0 0 6.03-3.05v-.03a20.12 20.12 0 0 0-3.57-13.69ZM8.02 15.33c-1.18 0-2.16-1.08-2.16-2.42 0-1.33.96-2.42 2.16-2.42 1.21 0 2.18 1.1 2.16 2.42 0 1.34-.96 2.42-2.16 2.42Zm7.97 0c-1.18 0-2.15-1.08-2.15-2.42 0-1.33.95-2.42 2.15-2.42 1.22 0 2.18 1.1 2.16 2.42 0 1.34-.94 2.42-2.16 2.42Z"
+							></path></svg
+						>
+					</a>
+					<a
+						href="https://x.com/the10kSquad"
+						target="_blank"
+						class="text-white flex justify-center hover:opacity-75 duration-100"
+						aria-label="x"
+					>
+						<svg
+							width="48"
+							height="48"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							><path
+								d="M 18.242188 2.25 L 21.554688 2.25 L 14.324219 10.507812 L 22.828125 21.75 L 16.171875 21.75 L 10.953125 14.933594 L 4.992188 21.75 L 1.679688 21.75 L 9.40625 12.914062 L 1.257812 2.25 L 8.082031 2.25 L 12.792969 8.480469 Z M 17.082031 19.773438 L 18.914062 19.773438 L 7.082031 4.125 L 5.113281 4.125 Z M 17.082031 19.773438 "
+							></path></svg
+						>
+					</a>
+				</div>
+			</main>
+			<div
+				class="hidden flex-col fixed top-0 left-0 z-100 w-full h-svh backdrop-blur-3xl items-center justify-center px-4"
+				id="popup"
+			>
+				<div
+					class="w-full flex text-[#050000] md:w-fit flex-col gap-1.5 bg-[#ffcb4b] backdrop-blur-xl rounded-3xl px-4 py-3 border-2 border-[#050000]"
+					id="submission"
+				>
+					<p class="text-xl">Paste your wallet.</p>
+					<input
+						type="text"
+						autocorrect="off"
+						spellcheck="false"
+						placeholder="0x..."
+						maxlength="42"
+						id="input"
+						class="w-full md:w-[calc(42ch)] font-mono h-11 rounded-2xl outline-none placeholder:text-[#05000055] text-[#050000]"
+					/>
+				</div>
+				<div
+					class="w-full hidden text-[#050000] md:w-fit flex-col gap-1.5 bg-[#ffcb4b] backdrop-blur-xl rounded-3xl px-4 py-3 border-2 border-[#050000]"
+					id="confirmation"
+				>
+					<p class="text-xl" id="info">
+						Do you want to submit 0x00...0000?
+					</p>
+					<button
+						id="submit"
+						class="bg-[#6a5ea7] text-lg cursor-pointer hover:opacity-75 duration-100 font-bold h-11 rounded-2xl border-2 border-[#050000] px-5 outline-none text-white"
+						>Submit</button
+					>
+				</div>
+			</div>
+		</div>
+		<div class="eggs-bg"></div>
+	</body>
+</html>

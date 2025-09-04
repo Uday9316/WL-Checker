@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Passero One', 'sans-serif';
+}
+
+body {
+  background: #e3f6fa url('/bg.jpg') center center / cover no-repeat;
+  touch-action: pan-y;
+}
+
+@media (max-width: 768px) {
+  body {
+    background: #e3f6fa url('/bg.jpg') center center / 100% auto no-repeat;
+  }
+}
